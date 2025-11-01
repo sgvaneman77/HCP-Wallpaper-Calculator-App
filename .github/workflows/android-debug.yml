@@ -36,14 +36,15 @@ jobs:
           sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
           yes | sdkmanager --licenses
 
+      # Create or update the Android project (no --verbose flags)
       - name: Ensure Android project
         run: |
           if [ -d android ]; then
-            npx cap sync android --verbose
+            npx cap sync android
           else
-            npx cap add android --verbose
-            npx cap copy android --verbose
-            npx cap sync android --verbose
+            npx cap add android
+            npx cap copy android
+            npx cap sync android
           fi
 
       - name: Make gradlew executable
