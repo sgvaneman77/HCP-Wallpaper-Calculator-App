@@ -2,28 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>HCP Wallpaper Calculator</title>
+
+    <!-- PWA basics -->
     <meta name="theme-color" content="#111827" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/assets/icon-192.png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="/assets/icon-512.png" />
-    <link rel="stylesheet" href="/src/style.css" />
-    
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./assets/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="./assets/icon-512.png" />
+
+    <!-- App styles (make sure this file exists at ./src/style.css) -->
+    <link rel="stylesheet" href="./src/style.css" />
   </head>
+
   <body>
     <div class="app-shell">
       <div class="toolbar">
         <div class="title">
-          <img src="/assets/icon-192.png" alt="HCP" width="20" height="20" style="border-radius:6px;opacity:.9">
+          <img
+            src="./assets/icon-192.png"
+            alt="HCP"
+            width="20"
+            height="20"
+            style="border-radius:6px;opacity:.9"
+          />
           HCP Wallpaper Calculator
         </div>
         <span class="badge">v1</span>
       </div>
 
       <div class="card">
+        <!-- Your calculator UI goes inside this container -->
         <div id="calc-root">
-          <p>Paste your calculator UI here.</p>
+          <!-- Paste your existing calculator HTML here -->
         </div>
 
         <div class="btn-row">
@@ -32,14 +46,18 @@
       </div>
     </div>
 
-    
+    <!-- PDF libs (needed for the Share as PDF feature) -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+    <!-- Simple PWA service worker registration -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
       }
     </script>
-    <script type="module" src="/src/main.js"></script>
+
+    <!-- App logic (make sure this file exists at ./src/main.js) -->
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
