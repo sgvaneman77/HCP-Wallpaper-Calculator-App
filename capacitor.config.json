@@ -1,0 +1,9 @@
+{
+  "appId": "com.hicountry.wallpapercalculator",
+  "appName": "HCP Wallpaper Calculator",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>HCP Wallpaper Calculator</title>
+    <meta name="theme-color" content="#111827" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/assets/icon-512.png" />
+    <link rel="stylesheet" href="/src/style.css" />
+    
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="toolbar">
+        <div class="title">
+          <img src="/assets/icon-192.png" alt="HCP" width="20" height="20" style="border-radius:6px;opacity:.9">
+          HCP Wallpaper Calculator
+        </div>
+        <span class="badge">v1</span>
+      </div>
+
+      <div class="card">
+        <div id="calc-root">
+          <p>Paste your calculator UI here.</p>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn primary" id="sharePdfBtn">Share as PDF</button>
+        </div>
+      </div>
+    </div>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      }
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
