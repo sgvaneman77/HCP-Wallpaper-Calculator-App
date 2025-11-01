@@ -1,0 +1,82 @@
+workflows:
+  ios_app_store:
+    name: iOS App Store (Capacitor)
+    environment:
+      xcode: latest
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      # Set these in Codemagic > App Settings > Environment variables
+      # APP_STORE_CONNECT_KEY_ID:        <your key id>
+      # APP_STORE_CONNECT_ISSUER_ID:     <your issuer id>
+      # APP_STORE_CONNECT_PRIVATE_KEY:   <paste contents of .p8 (as secure env var)>
+    scripts:
+      - name: Install tools (CocoaPods & xcpretty)
+        script: |
+          sudo gem install cocoapods xcpretty
+      - name: Install deps & build web
+        script: |
+          npm ci
+          npm run build
+      - name: Add/Sync iOS (Capacitor) & install pods
+        script: |
+          npx cap add ios || true
+          npx cap sync ios
+          cd ios/App && pod install --repo-update && cd ../..
+      - name: Xcode archive (Release)
+        script: |
+          xcodebuild \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath build/App.xcarchive \
+            archive | xcpretty
+      - name: Export .ipa (App Store)
+        script: |
+          cat > ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+            <dict>
+              <key>method</key><string>app-store</string>
+              <key>signingStyle</key><string>automatic</string>
+              <key>uploadBitcode</key><false/>
+              <key>compileBitcode</key><false/>
+            </dict>
+          </plist>
+          EOF
+          xcodebuild -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist ExportOptions.plist | xcpretty
+    artifacts:
+      - build/ipa/*.ipa
+      - build/App.xcarchive
+    publishing:
+      app_store_connect:
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers   # change or remove as you like
+        key_id: $APP_STORE_CONNECT_KEY_ID
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+
+  android_debug:
+    name: Android Debug APK (Capacitor)
+    environment:
+      vars:
+        GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx2048m"
+    scripts:
+      - name: Install deps & build web
+        script: |
+          npm ci
+          npm run build
+      - name: Add/Sync Android (Capacitor)
+        script: |
+          npx cap add android || true
+          npx cap sync android
+      - name: Assemble Debug APK
+        script: |
+          ./android/gradlew -p android assembleDebug
+    artifacts:
+      - android/app/build/outputs/apk/debug/*.apk
